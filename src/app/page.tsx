@@ -22,13 +22,13 @@ export default function Home() {
             <Button asChild className="bg-violet-500 text-white hover:bg-violet-400">
               <Link href="/audit">Start Free Audit</Link>
             </Button>
-            <Button variant="outline" className="border-white/20 bg-transparent">
-              Built for startup finance + engineering teams
+            <Button asChild variant="outline" className="border-white/20 bg-transparent">
+              <a href="#features">See product highlights</a>
             </Button>
           </div>
         </section>
 
-        <section className="mt-16 grid gap-4 md:grid-cols-3">
+        <section id="features" className="mt-16 grid gap-4 md:grid-cols-3 scroll-mt-20">
           {["YC founders", "Seed to Series B teams", "AI-first product orgs"].map((item) => (
             <Card key={item} className="border-white/10 bg-zinc-900/40">
               <CardContent className="p-5 text-sm text-zinc-300">{item}</CardContent>

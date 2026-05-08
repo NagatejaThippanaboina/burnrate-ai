@@ -28,3 +28,18 @@
 - Build premium landing page
 - Create multi-step audit form
 - Create pricing data structure and audit engine skeleton
+## Day 2 — 2026-05-08
+
+**Hours worked:** 553a
+
+**What I did:**
+Built the core BURNRATE AI frontend structure using Next.js App Router, TypeScript, Tailwind CSS, and shadcn/ui. Created the premium SaaS landing page, multi-step audit flow, reusable UI components, and initial results experience. Organized the architecture into scalable folders for app routes, components, business logic, pricing data, and TypeScript types.
+
+**What I learned:**
+Learned how modern SaaS products structure frontend architecture for scalability and how clean UI/UX design improves perceived product quality.
+
+**Blockers / what I'm stuck on:**
+Need to implement the real deterministic audit engine logic and connect all calculations dynamically to the results page.
+
+**Plan for tomorrow:**
+Implement pricing datasets, deterministic audit recommendations, savings calculations, local persistence, and improved results logic.

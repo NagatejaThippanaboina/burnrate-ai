@@ -1,61 +1,70 @@
 export type UseCase = "coding" | "writing" | "research" | "mixed";
+export type ToolCategory = "chat" | "coding" | "research" | "api" | "builder";
+export type RecommendationType = "downgrade" | "consolidate" | "alternative" | "rightsize" | "optimized";
+export type RecommendationConfidence = "High confidence" | "Moderate confidence";
+export type RecommendationCategory = "Plan Optimization" | "Vendor Consolidation" | "Usage Fit" | "API Efficiency";
 
-export type ToolCategory = "core" | "api" | "advanced";
-
-export interface ToolPlan {
+export interface Plan {
   id: string;
   name: string;
-  monthlyPricePerSeat: number;
-  annualPricePerSeat?: number;
-  supportsApiUsage?: boolean;
+  monthlyPrice: number;
+  seatBased: boolean;
+  minTeamSize?: number;
+  includedMonthlyUsageUsd?: number;
   notes?: string;
 }
 
-export interface ToolPricing {
+export interface Tool {
   id: string;
   name: string;
-  category: ToolCategory;
   vendor: string;
-  plans: ToolPlan[];
+  category: ToolCategory;
+  bestUseCase: UseCase;
+  plans: Plan[];
 }
 
-export interface ToolInput {
+export interface UserSelection {
   toolId: string;
   planId: string;
   monthlySpend: number;
 }
 
-export interface AuditInput {
-  tools: ToolInput[];
-  teamSize: number;
-  useCase: UseCase;
-}
-
-export interface ToolRecommendation {
+export interface AuditRecommendation {
+  key: string;
   toolId: string;
   toolName: string;
   currentPlan: string;
   recommendedPlan: string;
   currentMonthlySpend: number;
-  expectedMonthlyCost: number;
+  optimizedMonthlySpend: number;
   monthlySavings: number;
-  yearlySavings: number;
-  overspendPercentage: number;
-  explanation: string;
-  recommendationType: "plan" | "vendor" | "optimized";
+  annualSavings: number;
+  recommendationType: RecommendationType;
+  category: RecommendationCategory;
+  confidence: RecommendationConfidence;
+  reasoning: string;
+  badge: string;
 }
 
 export interface AuditResult {
   id: string;
-  input: AuditInput;
-  recommendations: ToolRecommendation[];
-  totalMonthlySpend: number;
-  optimizedMonthlySpend: number;
+  selections: UserSelection[];
+  teamSize: number;
+  useCase: UseCase;
+  recommendations: AuditRecommendation[];
+  totalCurrentMonthlySpend: number;
+  totalOptimizedMonthlySpend: number;
   totalMonthlySavings: number;
-  totalYearlySavings: number;
-  overspendPercentage: number;
+  totalAnnualSavings: number;
+  savingsRate: number;
   isOptimized: boolean;
   createdAt: string;
+}
+
+export interface AuditInput {
+  tools: UserSelection[];
+  teamSize: number;
+  useCase: UseCase;
 }
 
 export interface LeadCapture {

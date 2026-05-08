@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { pricingCatalog } from "@/data/pricing";
 import { runAudit } from "@/lib/audit";
-import { AuditInput, ToolInput, UseCase } from "@/types/audit";
+import { AuditInput, UseCase, UserSelection } from "@/types/audit";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,6 +30,7 @@ const initialDraft: DraftState = {
 
 const DRAFT_KEY = "burnrate-ai-audit-draft-v1";
 const REPORTS_KEY = "burnrate-ai-reports-v1";
+const LAST_REPORT_KEY = "burnrate-ai-last-report-id";
 
 export function AuditWizard() {
   const router = useRouter();
@@ -76,7 +77,7 @@ export function AuditWizard() {
 
   const submitAudit = () => {
     setIsSubmitting(true);
-    const tools: ToolInput[] = selectedTools.map((tool) => ({
+    const tools: UserSelection[] = selectedTools.map((tool) => ({
       toolId: tool.id,
       planId: draft.plans[tool.id],
       monthlySpend: Number(draft.spends[tool.id] ?? 0),
@@ -94,6 +95,7 @@ export function AuditWizard() {
 
     reports[result.id] = result;
     window.localStorage.setItem(REPORTS_KEY, JSON.stringify(reports));
+    window.localStorage.setItem(LAST_REPORT_KEY, result.id);
     window.localStorage.removeItem(DRAFT_KEY);
     router.push(`/result/${result.id}`);
   };
@@ -127,8 +129,14 @@ export function AuditWizard() {
                       : "border-white/10 bg-zinc-900/70 hover:border-white/30"
                   }`}
                 >
-                  <p className="font-medium text-white">{tool.name}</p>
+                  <div className="flex items-center justify-between">
+                    <p className="font-medium text-white">{tool.name}</p>
+                    <Badge variant="secondary" className="border-white/20 bg-white/5 text-[10px] uppercase tracking-wide text-zinc-300">
+                      {tool.category}
+                    </Badge>
+                  </div>
                   <p className="text-xs text-zinc-400">{tool.vendor}</p>
+                  <p className="text-xs text-zinc-500">Best for: {tool.bestUseCase}</p>
                 </button>
               );
             })}
@@ -153,7 +161,8 @@ export function AuditWizard() {
                   <option value="">Select plan</option>
                   {tool.plans.map((plan) => (
                     <option key={plan.id} value={plan.id}>
-                      {plan.name} - ${plan.monthlyPricePerSeat}/seat
+                      {plan.name} - ${plan.monthlyPrice}
+                      {plan.seatBased ? "/seat" : "/month"}
                     </option>
                   ))}
                 </select>
@@ -164,6 +173,9 @@ export function AuditWizard() {
 
         {step === 3 && (
           <div className="space-y-4">
+            <p className="text-xs text-zinc-400">
+              Enter actual monthly spend from invoices. The engine compares this against plan benchmarks.
+            </p>
             {selectedTools.map((tool) => (
               <label key={tool.id} className="block space-y-2">
                 <span className="text-sm text-zinc-300">{tool.name} monthly spend</span>
@@ -223,6 +235,9 @@ export function AuditWizard() {
           <Button variant="outline" asChild className="border-white/20 bg-transparent text-zinc-200">
             <Link href="/">Back to landing</Link>
           </Button>
+          {!selectedTools.length && step > 1 && (
+            <p className="text-xs text-amber-300">No tools selected. Go back to Step 1 and choose at least one tool.</p>
+          )}
           <div className="flex gap-2">
             {step > 1 && (
               <Button variant="ghost" onClick={() => setStep((current) => current - 1)}>
