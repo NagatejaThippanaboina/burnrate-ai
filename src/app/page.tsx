@@ -1,65 +1,106 @@
-import Image from "next/image";
+import Link from "next/link";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <main className="relative flex-1 overflow-hidden bg-zinc-950 text-zinc-100">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(139,92,246,0.16),transparent_40%),radial-gradient(circle_at_80%_10%,rgba(59,130,246,0.18),transparent_36%)]" />
+      <div className="mx-auto max-w-6xl px-6 py-16 md:py-24">
+        <section className="space-y-8 text-center md:text-left">
+          <Badge className="bg-violet-500/20 text-violet-100">BURNRATE AI</Badge>
+          <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-white md:text-6xl">
+            Stop leaking budget across AI tools. Audit your burn in minutes.
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="max-w-2xl text-zinc-300">
+            BURNRATE AI analyzes your current stack, benchmarks plan efficiency, and shows deterministic monthly and
+            yearly savings opportunities with explainable recommendations.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+          <div className="flex flex-wrap gap-3">
+            <Button asChild className="bg-violet-500 text-white hover:bg-violet-400">
+              <Link href="/audit">Start Free Audit</Link>
+            </Button>
+            <Button variant="outline" className="border-white/20 bg-transparent">
+              Built for startup finance + engineering teams
+            </Button>
+          </div>
+        </section>
+
+        <section className="mt-16 grid gap-4 md:grid-cols-3">
+          {["YC founders", "Seed to Series B teams", "AI-first product orgs"].map((item) => (
+            <Card key={item} className="border-white/10 bg-zinc-900/40">
+              <CardContent className="p-5 text-sm text-zinc-300">{item}</CardContent>
+            </Card>
+          ))}
+        </section>
+
+        <section className="mt-16 grid gap-4 md:grid-cols-3">
+          {[
+            "Multi-vendor AI spend tracking",
+            "Deterministic optimization engine",
+            "Shareable investor-ready reports",
+          ].map((feature) => (
+            <Card key={feature} className="border-white/10 bg-zinc-900/40">
+              <CardContent className="p-5">
+                <p className="font-medium text-white">{feature}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </section>
+
+        <section className="mt-16 grid gap-4 md:grid-cols-3">
+          {[
+            ["1", "Select tools and plans"],
+            ["2", "Enter monthly spend and team profile"],
+            ["3", "Get savings map and share link"],
+          ].map(([id, text]) => (
+            <Card key={id} className="border-white/10 bg-zinc-900/40">
+              <CardContent className="p-5">
+                <p className="text-sm text-violet-300">Step {id}</p>
+                <p className="mt-1 font-medium text-white">{text}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </section>
+
+        <section className="mt-16 grid gap-4 md:grid-cols-2">
+          <Card className="border-emerald-300/20 bg-emerald-900/10">
+            <CardContent className="p-5">
+              <p className="text-sm text-zinc-300">Savings example A</p>
+              <p className="text-3xl font-semibold text-emerald-300">$1,240/month</p>
+              <p className="text-xs text-zinc-400">Consolidated coding stack + API tier right-sizing</p>
+            </CardContent>
+          </Card>
+          <Card className="border-emerald-300/20 bg-emerald-900/10">
+            <CardContent className="p-5">
+              <p className="text-sm text-zinc-300">Savings example B</p>
+              <p className="text-3xl font-semibold text-emerald-300">$780/month</p>
+              <p className="text-xs text-zinc-400">Plan downgrade without capability loss</p>
+            </CardContent>
+          </Card>
+        </section>
+
+        <section className="mt-16 grid gap-3">
+          {[
+            "Is this deterministic? Yes, all pricing is hardcoded and rule-based.",
+            "Do you gate results? No, value is shown before lead capture.",
+            "Can I share my report? Yes, every result has a copyable share URL.",
+          ].map((faq) => (
+            <Card key={faq} className="border-white/10 bg-zinc-900/40">
+              <CardContent className="p-4 text-sm text-zinc-300">{faq}</CardContent>
+            </Card>
+          ))}
+        </section>
+
+        <section className="mt-16 rounded-2xl border border-violet-300/25 bg-violet-900/15 p-8 text-center">
+          <p className="text-zinc-300">Ready to cut AI burnrate with explainable recommendations?</p>
+          <Button asChild className="mt-4 bg-violet-500 text-white hover:bg-violet-400">
+            <Link href="/audit">Start Free Audit</Link>
+          </Button>
+        </section>
+      </div>
+    </main>
   );
 }
