@@ -36,6 +36,7 @@ export function AuditWizard() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [draft, setDraft] = useState<DraftState>(() => {
     if (typeof window === "undefined") return initialDraft;
     const raw = window.localStorage.getItem(DRAFT_KEY);
@@ -75,8 +76,9 @@ export function AuditWizard() {
     });
   };
 
-  const submitAudit = () => {
+  const submitAudit = async () => {
     setIsSubmitting(true);
+    setSubmitError(null);
     const tools: UserSelection[] = selectedTools.map((tool) => ({
       toolId: tool.id,
       planId: draft.plans[tool.id],
@@ -89,15 +91,42 @@ export function AuditWizard() {
       useCase: draft.useCase,
     };
 
-    const result = runAudit(auditInput);
-    const existingReports = window.localStorage.getItem(REPORTS_KEY);
-    const reports = existingReports ? (JSON.parse(existingReports) as Record<string, unknown>) : {};
+    try {
+      const result = runAudit(auditInput);
+      const existingReports = window.localStorage.getItem(REPORTS_KEY);
+      const reports = existingReports ? (JSON.parse(existingReports) as Record<string, unknown>) : {};
 
-    reports[result.id] = result;
-    window.localStorage.setItem(REPORTS_KEY, JSON.stringify(reports));
-    window.localStorage.setItem(LAST_REPORT_KEY, result.id);
-    window.localStorage.removeItem(DRAFT_KEY);
-    router.push(`/result/${result.id}`);
+      reports[result.id] = result;
+      window.localStorage.setItem(REPORTS_KEY, JSON.stringify(reports));
+      window.localStorage.setItem(LAST_REPORT_KEY, result.id);
+      window.localStorage.removeItem(DRAFT_KEY);
+
+      const response = await fetch("/api/audits", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          selectedTools: draft.selectedToolIds,
+          plans: draft.plans,
+          monthlySpend: result.totalCurrentMonthlySpend,
+          annualSavings: result.totalAnnualSavings,
+          recommendations: result.recommendations,
+          teamSize: draft.teamSize,
+          useCase: draft.useCase,
+          createdAt: result.createdAt,
+        }),
+      });
+
+      if (!response.ok) {
+        const payload = (await response.json()) as { error?: string };
+        throw new Error(payload.error ?? "Unable to save audit to database.");
+      }
+
+      router.push(`/result/${result.id}`);
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : "Unable to save audit. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -263,6 +292,7 @@ export function AuditWizard() {
             )}
           </div>
         </div>
+        {submitError ? <p className="text-sm text-red-300">{submitError}</p> : null}
       </CardContent>
     </Card>
   );

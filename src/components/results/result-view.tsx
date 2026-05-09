@@ -9,7 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
-const LEADS_KEY = "burnrate-ai-leads-v1";
+type LeadState = {
+  isLoading: boolean;
+  success: string | null;
+  error: string | null;
+};
 
 function SavingsCounter({ amount }: { amount: number }) {
   const [display, setDisplay] = useState(0);
@@ -39,7 +43,10 @@ export function ResultView({ result }: { result: AuditResult }) {
   const [copied, setCopied] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const [lead, setLead] = useState<LeadCapture>({ email: "", companyName: "", role: "" });
-  const [submitted, setSubmitted] = useState(false);
+  const [isTalkModalOpen, setIsTalkModalOpen] = useState(false);
+  const [talkLead, setTalkLead] = useState<LeadCapture>({ email: "", companyName: "", role: "" });
+  const [notifyLeadState, setNotifyLeadState] = useState<LeadState>({ isLoading: false, success: null, error: null });
+  const [talkLeadState, setTalkLeadState] = useState<LeadState>({ isLoading: false, success: null, error: null });
 
   const totalSavingsLabel = useMemo(
     () => ({
@@ -57,17 +64,72 @@ export function ResultView({ result }: { result: AuditResult }) {
     window.setTimeout(() => setCopied(false), 1600);
   };
 
-  const jumpToContact = () => {
-    document.getElementById("share-and-contact")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const isValidEmail = (email: string) => /\S+@\S+\.\S+/.test(email);
+
+  const submitLead = async (payload: LeadCapture, source: "talk_to_credex" | "notify_future_optimizations") => {
+    const response = await fetch("/api/leads", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: payload.email,
+        companyName: payload.companyName,
+        role: payload.role,
+        source,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorResponse = (await response.json()) as { error?: string };
+      throw new Error(errorResponse.error ?? "Failed to submit lead.");
+    }
   };
 
-  const submitLead = () => {
-    if (!lead.email) return;
-    const existing = window.localStorage.getItem(LEADS_KEY);
-    const leads = existing ? (JSON.parse(existing) as LeadCapture[]) : [];
-    leads.push(lead);
-    window.localStorage.setItem(LEADS_KEY, JSON.stringify(leads));
-    setSubmitted(true);
+  const submitNotifyLead = async () => {
+    if (!isValidEmail(lead.email)) {
+      setNotifyLeadState({ isLoading: false, success: null, error: "Please enter a valid email address." });
+      return;
+    }
+
+    setNotifyLeadState({ isLoading: true, success: null, error: null });
+    try {
+      await submitLead(lead, "notify_future_optimizations");
+      setNotifyLeadState({
+        isLoading: false,
+        success: "You are on the list. We will email future optimization ideas.",
+        error: null,
+      });
+      setLead({ email: "", companyName: "", role: "" });
+    } catch (error) {
+      setNotifyLeadState({
+        isLoading: false,
+        success: null,
+        error: error instanceof Error ? error.message : "Unable to submit right now.",
+      });
+    }
+  };
+
+  const submitTalkLead = async () => {
+    if (!isValidEmail(talkLead.email)) {
+      setTalkLeadState({ isLoading: false, success: null, error: "Please enter a valid email address." });
+      return;
+    }
+
+    setTalkLeadState({ isLoading: true, success: null, error: null });
+    try {
+      await submitLead(talkLead, "talk_to_credex");
+      setTalkLeadState({
+        isLoading: false,
+        success: "Thanks. The Credex team will reach out shortly.",
+        error: null,
+      });
+      setTalkLead({ email: "", companyName: "", role: "" });
+    } catch (error) {
+      setTalkLeadState({
+        isLoading: false,
+        success: null,
+        error: error instanceof Error ? error.message : "Unable to submit right now.",
+      });
+    }
   };
 
   return (
@@ -121,11 +183,15 @@ export function ResultView({ result }: { result: AuditResult }) {
               High impact opportunity detected. Talk to Credex and unlock discounted credits.
             </p>
             <div className="flex gap-2">
-              <Button asChild className="bg-emerald-500 text-black hover:bg-emerald-400">
-                <a href="mailto:hello@credex.ai?subject=BURNRATE%20AI%20Savings%20Discussion">Talk to Credex</a>
+              <Button onClick={() => setIsTalkModalOpen(true)} className="bg-emerald-500 text-black hover:bg-emerald-400">
+                Talk to Credex
               </Button>
-              <Button onClick={jumpToContact} variant="outline" className="border-emerald-400/50">
-                Book consultation
+              <Button
+                onClick={() => document.getElementById("share-and-contact")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+                variant="outline"
+                className="border-emerald-400/50"
+              >
+                Notify me about future optimizations
               </Button>
             </div>
           </CardContent>
@@ -185,34 +251,76 @@ export function ResultView({ result }: { result: AuditResult }) {
               <a href="mailto:hello@burnrate.ai?subject=Walkthrough%20my%20BURNRATE%20AI%20audit">Request walkthrough</a>
             </Button>
           </div>
-          {submitted ? (
-            <p className="text-sm text-emerald-300">Thanks, we will follow up with your full report.</p>
-          ) : (
-            <div className="grid gap-2 md:grid-cols-3">
+          <div className="grid gap-2 md:grid-cols-3">
+            <Input
+              placeholder="Email"
+              value={lead.email}
+              onChange={(event) => setLead((current) => ({ ...current, email: event.target.value }))}
+            />
+            <Input
+              placeholder="Company (optional)"
+              value={lead.companyName}
+              onChange={(event) => setLead((current) => ({ ...current, companyName: event.target.value }))}
+            />
+            <div className="flex gap-2">
               <Input
-                placeholder="Email"
-                value={lead.email}
-                onChange={(event) => setLead((current) => ({ ...current, email: event.target.value }))}
+                placeholder="Role (optional)"
+                value={lead.role}
+                onChange={(event) => setLead((current) => ({ ...current, role: event.target.value }))}
               />
-              <Input
-                placeholder="Company (optional)"
-                value={lead.companyName}
-                onChange={(event) => setLead((current) => ({ ...current, companyName: event.target.value }))}
-              />
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Role (optional)"
-                  value={lead.role}
-                  onChange={(event) => setLead((current) => ({ ...current, role: event.target.value }))}
-                />
-                <Button onClick={submitLead} disabled={!lead.email}>
-                  Get full report via email
-                </Button>
-              </div>
+              <Button onClick={submitNotifyLead} disabled={notifyLeadState.isLoading || !lead.email}>
+                {notifyLeadState.isLoading ? "Submitting..." : "Notify me about future optimizations"}
+              </Button>
             </div>
-          )}
+          </div>
+          {notifyLeadState.success ? <p className="text-sm text-emerald-300">{notifyLeadState.success}</p> : null}
+          {notifyLeadState.error ? <p className="text-sm text-red-300">{notifyLeadState.error}</p> : null}
         </CardContent>
       </Card>
+      {isTalkModalOpen ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+          <Card className="w-full max-w-xl border-white/15 bg-zinc-950">
+            <CardHeader>
+              <CardTitle className="text-white">Talk to Credex</CardTitle>
+              <CardDescription>Share your details and the team will reach out for a savings walkthrough.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Input
+                placeholder="Email"
+                value={talkLead.email}
+                onChange={(event) => setTalkLead((current) => ({ ...current, email: event.target.value }))}
+              />
+              <Input
+                placeholder="Company name (optional)"
+                value={talkLead.companyName}
+                onChange={(event) => setTalkLead((current) => ({ ...current, companyName: event.target.value }))}
+              />
+              <Input
+                placeholder="Role (optional)"
+                value={talkLead.role}
+                onChange={(event) => setTalkLead((current) => ({ ...current, role: event.target.value }))}
+              />
+              {talkLeadState.success ? <p className="text-sm text-emerald-300">{talkLeadState.success}</p> : null}
+              {talkLeadState.error ? <p className="text-sm text-red-300">{talkLeadState.error}</p> : null}
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  className="border-white/20"
+                  onClick={() => {
+                    setIsTalkModalOpen(false);
+                    setTalkLeadState({ isLoading: false, success: null, error: null });
+                  }}
+                >
+                  Close
+                </Button>
+                <Button onClick={submitTalkLead} disabled={talkLeadState.isLoading || !talkLead.email}>
+                  {talkLeadState.isLoading ? "Submitting..." : "Submit"}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      ) : null}
     </div>
   );
 }
