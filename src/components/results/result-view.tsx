@@ -47,6 +47,11 @@ export function ResultView({ result }: { result: AuditResult }) {
   const [talkLead, setTalkLead] = useState<LeadCapture>({ email: "", companyName: "", role: "" });
   const [notifyLeadState, setNotifyLeadState] = useState<LeadState>({ isLoading: false, success: null, error: null });
   const [talkLeadState, setTalkLeadState] = useState<LeadState>({ isLoading: false, success: null, error: null });
+  const [walkthroughLeadState, setWalkthroughLeadState] = useState<LeadState>({
+    isLoading: false,
+    success: null,
+    error: null,
+  });
 
   const totalSavingsLabel = useMemo(
     () => ({
@@ -66,7 +71,10 @@ export function ResultView({ result }: { result: AuditResult }) {
 
   const isValidEmail = (email: string) => /\S+@\S+\.\S+/.test(email);
 
-  const submitLead = async (payload: LeadCapture, source: "talk_to_credex" | "notify_future_optimizations") => {
+  const submitLead = async (
+    payload: LeadCapture,
+    source: "talk_to_credex" | "notify_future_optimizations" | "walkthrough_request",
+  ) => {
     const response = await fetch("/api/leads", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -101,6 +109,33 @@ export function ResultView({ result }: { result: AuditResult }) {
       setLead({ email: "", companyName: "", role: "" });
     } catch (error) {
       setNotifyLeadState({
+        isLoading: false,
+        success: null,
+        error: error instanceof Error ? error.message : "Unable to submit right now.",
+      });
+    }
+  };
+
+  const submitWalkthroughLead = async () => {
+    if (!isValidEmail(lead.email)) {
+      setWalkthroughLeadState({
+        isLoading: false,
+        success: null,
+        error: "Please enter a valid email in the fields below.",
+      });
+      return;
+    }
+
+    setWalkthroughLeadState({ isLoading: true, success: null, error: null });
+    try {
+      await submitLead(lead, "walkthrough_request");
+      setWalkthroughLeadState({
+        isLoading: false,
+        success: "Thanks! Our team will reach out shortly.",
+        error: null,
+      });
+    } catch (error) {
+      setWalkthroughLeadState({
         isLoading: false,
         success: null,
         error: error instanceof Error ? error.message : "Unable to submit right now.",
@@ -247,10 +282,17 @@ export function ResultView({ result }: { result: AuditResult }) {
           <div className="h-px bg-white/10" />
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm text-zinc-300">Want an operator walkthrough of this report?</p>
-            <Button asChild className="bg-violet-500 text-white hover:bg-violet-400">
-              <a href="mailto:hello@burnrate.ai?subject=Walkthrough%20my%20BURNRATE%20AI%20audit">Request walkthrough</a>
+            <Button
+              type="button"
+              className="bg-violet-500 text-white hover:bg-violet-400"
+              disabled={walkthroughLeadState.isLoading || Boolean(walkthroughLeadState.success)}
+              onClick={submitWalkthroughLead}
+            >
+              {walkthroughLeadState.isLoading ? "Submitting..." : "Request walkthrough"}
             </Button>
           </div>
+          {walkthroughLeadState.success ? <p className="text-sm text-emerald-300">{walkthroughLeadState.success}</p> : null}
+          {walkthroughLeadState.error ? <p className="text-sm text-red-300">{walkthroughLeadState.error}</p> : null}
           <div className="grid gap-2 md:grid-cols-3">
             <Input
               placeholder="Email"
