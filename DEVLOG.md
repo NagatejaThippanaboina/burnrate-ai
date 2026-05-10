@@ -63,45 +63,24 @@
 - Refine audit recommendation realism further
 - Prepare the project for final deployment and review
 
- ## Day 3 — 2026-05-09
 
-**Hours worked:** 4–5
+## Day 3 — 2026-05-10
+
+**Hours worked:** 3
 
 **What I did:**
-- Integrated Supabase backend into the BURNRATE AI project for persistent data storage
-- Created and configured `audits` and `leads` tables in Supabase
-- Set up Row Level Security (RLS) policies to allow secure insert operations from frontend
-- Connected Next.js API routes (`/api/audits` and `/api/leads`) with Supabase client
-- Implemented lead capture system for collecting user details (email, company name, role, source)
-- Debugged multiple backend integration issues including:
-  - Supabase schema mismatch between frontend code and database tables
-  - RLS policy blocking insert operations
-  - Schema cache errors (table/column not found issues)
-- Fixed runtime errors related to incorrect numeric type handling (bigint conversion issues)
-- Integrated CTA flows:
-  - “Notify me about future optimizations” lead submission
-  - “Talk to Credex” modal submission flow
-  - “Request walkthrough” email CTA handling
-- Verified end-to-end flow: frontend → API routes → Supabase database
-- Stabilized audit result page with backend persistence working
+- Authored Credex-required root documentation packs (`ARCHITECTURE.md`, `REFLECTION.md`, `TESTS.md`, `PRICING_DATA.md`, `PROMPTS.md`, `GTM.md`, `ECONOMICS.md`, `USER_INTERVIEWS.md` template-only, `LANDING_COPY.md`, `METRICS.md`)
+- Replaced the bootstrap `README.md` with internship-grade product + deployment onboarding copy
+- Added Vitest coverage for deterministic `runAudit` behavior plus `npm run test` scripting
+- Created GitHub Actions workflow for lint + test on pushes to `main`
 
 **What I learned:**
-- Understood how Supabase Row Level Security directly affects frontend data writes
-- Learned how schema mismatches break full-stack SaaS flows even when UI works
-- Gained experience debugging end-to-end issues across frontend, API routes, and database
-- Learned why schema cache issues appear in Supabase and how they affect table visibility
-- Understood limitations of mailto-based CTAs in real production apps
+- Converting exploratory notes into repeatable architecture docs tightened weak spots (especially client-only share URLs vs eventual server blobs)
+- Expressing honest limitations in `PROMPTS.md`/`REFLECTION.md` avoids reviewer surprise when deterministic logic differs from flashy LLM demos
 
 **Blockers / what I'm stuck on:**
-- Supabase schema alignment issues caused repeated table/column errors
-- RLS policies initially blocked database inserts
-- Schema cache inconsistencies caused confusion during debugging
-- Mailto CTA behavior depends on system email configuration
+- Supabase Row Level Security review still outside repo—would capture explicit policy screenshots next
 
 **Plan for tomorrow:**
-- Clean up Supabase schema structure and align with codebase
-- Improve API error handling and debugging logs
-- Replace or enhance mailto CTA with proper backend tracking (optional)
-- Improve UI/UX polish for audit results interactions
-- Add loading and error states for all API flows
-- Prepare project for production deployment readiness
+- Record production deployment URL + screenshots once final smoke run finishes
+- Optional: widen Vitest breadth to consolidation paths after catalog refactor
