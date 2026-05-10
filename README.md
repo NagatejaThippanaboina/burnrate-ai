@@ -16,7 +16,7 @@ Deterministic SaaS funnel for benchmarking **multi-vendor AI tool spend**. Teams
 - High-savings Credex consultation funnel
 - Deterministic finance-readable optimization logic
 
-## Screenshots _(placeholders — drop assets under `./docs/screenshots/`)_
+## Screenshots 
 
 | Area | Filename placeholder |
 |------|-----------------------|
@@ -25,7 +25,6 @@ Deterministic SaaS funnel for benchmarking **multi-vendor AI tool spend**. Teams
 | Results dashboard | `docs/screenshots/result-overview.png` |
 | Lead capture footer | `docs/screenshots/lead-capture-share.png` |
 
-_Update this table with real thumbnails before external review._
 
 ## Target users
 
