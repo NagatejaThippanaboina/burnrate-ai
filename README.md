@@ -1,36 +1,133 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BURNRATE AI
+AI infrastructure costs are exploding across startups using Cursor, Claude, ChatGPT, Copilot, and API-based workflows.
 
-## Getting Started
+BURNRATE AI helps teams benchmark their AI tooling spend, detect unnecessary upgrades, compare cheaper alternatives, and estimate monthly + annual savings instantly.
 
-First, run the development server:
+Deterministic SaaS funnel for benchmarking **multi-vendor AI tool spend**. Teams walk a four-step audit, trigger the rules engine backed by curated pricing catalogs, inspect explainable optimization cards, optionally share `/result/[id]` links without accounts, and register leads through Supabase-backed API routes deployed on **Vercel**.
+
+## Core features
+
+- AI tooling spend audit engine
+- Multi-vendor pricing comparison
+- Shareable public audit URLs
+- Personalized savings recommendations
+- Supabase-backed lead capture
+- Persistent audit state across reloads
+- High-savings Credex consultation funnel
+- Deterministic finance-readable optimization logic
+
+## Screenshots _(placeholders — drop assets under `./docs/screenshots/`)_
+
+| Area | Filename placeholder |
+|------|-----------------------|
+| Landing hero | `docs/screenshots/landing-hero.png` |
+| Wizard step 4 | `docs/screenshots/audit-wizard-step4.png` |
+| Results dashboard | `docs/screenshots/result-overview.png` |
+| Lead capture footer | `docs/screenshots/lead-capture-share.png` |
+
+_Update this table with real thumbnails before external review._
+
+## Target users
+
+- Startup founders
+- Engineering managers
+- AI-heavy product teams
+- Agencies managing multi-seat AI subscriptions
+- Teams using multiple LLM/API vendors simultaneously
+
+## Deployment
+
+| Env | URL |
+|-----|-----|
+| **Production** | `https://burnrate-ai-ruby.vercel.app` |
+
+> Keep your live URL synchronized with Credex reviewers—prefer pinning the canonical production hostname you control via Vercel dashboard.
+
+### Environment variables _(Supabase)_ 
+
+Set in **Vercel → Project Settings → Environment Variables**:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+Ensure Supabase tables **`audits`** and **`leads`** exist plus appropriate RLS for production exposure.
+
+---
+
+## Tech stack
+
+- Next.js 15
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- Supabase
+- Vercel
+- Vitest
+- Resend (planned transactional email flow)
+
+## Quickstart
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/NagatejaThippanaboina/burnrate-ai.git
+cd burnrate-ai
+npm ci
+npm run dev           # Next.js Dev Server → http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Other scripts:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run lint          # ESLint (Next preset)
+npm run test          # Vitest — audit engine regressions
+npm run test:coverage # Vitest coverage for src/lib/audit.ts
+npm run build         # Production Next build preview
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Architecture at a glance
 
-To learn more about Next.js, take a look at the following resources:
+| Layer | Path / artifact |
+|-------|----------------|
+| Routes | `src/app/` `(page.tsx / audit/page.tsx / result/[id]/...)` |
+| Audit engine | `src/lib/audit.ts` |
+| Canonical pricing | `src/data/pricing.ts` |
+| Supabase gateways | `src/app/api/audits/route.ts`, `src/app/api/leads/route.ts` |
+| Client persistence | Wizard + results hydrate `localStorage` keys prefixed `burnrate-ai-*` |
+| Persistence client | Root `lib/supabase.ts` with typed wrappers |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Detailed diagram lives in **`ARCHITECTURE.md`**.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Automated quality gates
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Continuous integration (`.github/workflows/ci.yml`): **lint + Vitest `npm run test`** on every **`push`** to **`main`**.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Explain test intent and coverage knobs in **`TESTS.md`**.
+
+---
+
+## Five decisions & deliberate trade-offs
+
+| # | Decision | Why | Trade-off accepted |
+|---|----------|-----|---------------------|
+| 1 | **Deterministic engine** (`runAudit`) | Audits stay explainable; judges can reconstruct math from catalog + selections | Narrative personalization requires future LLM layer (see PROMPTS.md) |
+| 2 | **Client-first persisted results (`localStorage`)** | Ships shareable audits without auth scaffolding | Opening same URL on unrelated device misses prior saves until optional server blobs exist |
+| 3 | **Supabase via anon key in Route Handlers** | Simplest Credex-aligned integration path vs DIY backend | Policies must tightly scope insert paths (document in Supabase console) |
+| 4 | **Vitest narrowly targets engine** (`audit.test.ts`) | Fast regressions guarding economic logic | Does not presently snapshot React UI regressions intentionally |
+| 5 | **shadcn + Tailwind primitives** | Accelerates cohesive premium SaaS skins | Opinionated markup locked to radix slot merge semantics |
+
+Companion narrative + honest reflection sits in **`REFLECTION.md`**; business framing in **`ECONOMICS.md`**, **`GTM.md`**, **`METRICS.md`**.
+
+Credex-required documentation index:
+
+- **`ARCHITECTURE.md`**
+- **`REFLECTION.md`**
+- **`TESTS.md`**
+- **`PRICING_DATA.md`** / **`LANDING_COPY.md`**
+- **`PROMPTS.md`**
+- **`GTM.md`**
+- **`ECONOMICS.md`**
+- **`USER_INTERVIEWS.md`** 
+- **`DEVLOG.md`** _(daily Credex format)_
