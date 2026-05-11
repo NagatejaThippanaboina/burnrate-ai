@@ -103,6 +103,7 @@ const fromSupabaseRow = (row: SupabaseAuditRow): AuditResult => {
 export function ResultHydrator({ id }: { id: string }) {
   const [mounted, setMounted] = useState(false);
   const [result, setResult] = useState<AuditResult | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [lastReportId] = useState<string | null>(() => {
     if (typeof window === "undefined") return null;
     try {
@@ -121,6 +122,7 @@ export function ResultHydrator({ id }: { id: string }) {
     if (!mounted) return;
 
     const load = async () => {
+      setIsLoading(true);
       // 1) Prefer Supabase for share links and persistence.
       try {
         const supabase = getSupabaseBrowserClient();
@@ -210,17 +212,32 @@ export function ResultHydrator({ id }: { id: string }) {
       } catch {
         setResult(null);
       }
+
+      setIsLoading(false);
     };
 
-    void load();
+    void load().finally(() => {
+      setIsLoading(false);
+    });
 
   }, [id, mounted]);
 
-  if (!mounted) {
+  if (!mounted || isLoading) {
     return (
       <div className="space-y-4">
-        <div className="h-40 animate-pulse rounded-2xl border border-white/10 bg-zinc-900" />
-        <div className="h-56 animate-pulse rounded-2xl border border-white/10 bg-zinc-900" />
+        <div className="rounded-2xl border border-white/10 bg-zinc-950/70 p-5">
+          <p className="text-sm font-medium text-zinc-200">Generating your optimization report...</p>
+          <p className="mt-1 text-xs text-zinc-400">
+            Analyzing tooling spend, vendor overlap, and savings opportunities.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+          <div className="h-28 animate-pulse rounded-xl border border-white/10 bg-zinc-900" />
+          <div className="h-28 animate-pulse rounded-xl border border-white/10 bg-zinc-900" />
+          <div className="h-28 animate-pulse rounded-xl border border-white/10 bg-zinc-900 md:block" />
+        </div>
+        <div className="h-36 animate-pulse rounded-2xl border border-white/10 bg-zinc-900" />
+        <div className="h-52 animate-pulse rounded-2xl border border-white/10 bg-zinc-900" />
       </div>
     );
   }

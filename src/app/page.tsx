@@ -82,14 +82,47 @@ export default function Home() {
           </Card>
         </section>
 
-        <section className="mt-16 grid gap-3">
+        <section className="mt-16 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {[
-            "Is this deterministic? Yes, all pricing is hardcoded and rule-based.",
-            "Do you gate results? No, value is shown before lead capture.",
-            "Can I share my report? Yes, every result has a copyable share URL.",
-          ].map((faq) => (
-            <Card key={faq} className="border-white/10 bg-zinc-900/40">
-              <CardContent className="p-4 text-sm text-zinc-300">{faq}</CardContent>
+            {
+              title: "Transparent by design",
+              description:
+                "Every recommendation is generated from deterministic pricing and optimization rules — no black-box scoring.",
+            },
+            {
+              title: "Instant value, no signup wall",
+              description:
+                "Teams can complete audits and review savings opportunities before submitting contact details.",
+            },
+            {
+              title: "Built for collaboration",
+              description:
+                "Every audit generates a shareable report URL for founders, operators, and finance stakeholders.",
+            },
+            {
+              title: "Finance-readable recommendations",
+              description:
+                "Optimization insights are designed to be understandable by engineering leaders, founders, and finance teams alike.",
+            },
+            {
+              title: "Modern AI vendor coverage",
+              description:
+                "Benchmark spend across copilots, LLM subscriptions, builder tools, and API infrastructure from leading AI vendors.",
+            },
+            {
+              title: "Designed for operational speed",
+              description:
+                "Run a complete AI infrastructure audit in minutes with deterministic outputs and actionable optimization guidance.",
+            },
+          ].map((item) => (
+            <Card
+              key={item.title}
+              className="h-full border-white/10 bg-zinc-900/40 transition-colors hover:border-white/20 hover:bg-zinc-900/70"
+            >
+              <CardContent className="flex h-full flex-col gap-2 p-4">
+                <p className="text-sm font-semibold text-white">{item.title}</p>
+                <p className="text-sm leading-6 text-zinc-300">{item.description}</p>
+              </CardContent>
             </Card>
           ))}
         </section>
