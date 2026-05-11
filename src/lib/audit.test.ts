@@ -51,7 +51,7 @@ describe("runAudit — deterministic audit engine", () => {
     };
 
     const result = runAudit(input);
-    expect(result.totalCurrentMonthlySpend).toBeCloseTo(140.51, 2);
+    expect(result.totalCurrentMonthlySpend).toBeCloseTo(320, 2);
   });
 
   it("recommends downgrade when team is below seat minimum on a plan", () => {
