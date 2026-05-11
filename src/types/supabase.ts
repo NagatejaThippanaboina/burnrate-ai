@@ -14,6 +14,7 @@ export type Database = {
           team_size: number;
           use_case: string;
           created_at: string;
+          ai_summary: string | null;
         };
         Insert: {
           id?: string;
@@ -25,6 +26,7 @@ export type Database = {
           team_size: number;
           use_case: string;
           created_at?: string;
+          ai_summary?: string | null;
         };
         Update: {
           id?: string;
@@ -36,6 +38,7 @@ export type Database = {
           team_size?: number;
           use_case?: string;
           created_at?: string;
+          ai_summary?: string | null;
         };
         Relationships: [];
       };

@@ -84,6 +84,38 @@ npm run build         # Production Next build preview
 
 ---
 
+## Suggested Demo Inputs
+
+Use these reviewer-friendly scenarios in `/audit` (or click the in-app **Try Demo Scenarios** buttons) to quickly validate output quality.
+
+### Scenario 1 — High Savings
+
+- **Team Size:** 10
+- **Use Case:** Mixed
+- **Tools + Spend:**
+  - Cursor Enterprise — `$180/month`
+  - Gemini Pro — `$260/month`
+- **Expected behavior:** strong optimization recommendations, vendor consolidation insights, and high savings percentage.
+
+### Scenario 2 — Already Optimized
+
+- **Team Size:** 2
+- **Use Case:** Writing
+- **Tools + Spend:**
+  - ChatGPT Free — `$0/month`
+- **Expected behavior:** minimal savings, efficient stack narrative, and limited optimization headroom.
+
+### Scenario 3 — API Heavy
+
+- **Team Size:** 15
+- **Use Case:** API
+- **Tools + Spend:**
+  - OpenAI API Growth — `$600/month`
+  - Claude Team — `$240/month`
+- **Expected behavior:** API efficiency recommendations, spend governance insights, and infrastructure optimization narrative.
+
+---
+
 ## Architecture at a glance
 
 | Layer | Path / artifact |

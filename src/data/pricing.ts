@@ -3,19 +3,12 @@ import { Tool } from "@/types/audit";
 export const PRICING_LAST_UPDATED = "2026-05-08";
 
 export const pricingCatalog: Tool[] = [
-  {
-    id: "chatgpt",
-    name: "ChatGPT",
-    vendor: "OpenAI",
-    category: "chat",
-    bestUseCase: "mixed",
-    plans: [
-      { id: "free", name: "Free", monthlyPrice: 0, seatBased: true, notes: "Personal trials and low usage." },
-      { id: "plus", name: "Plus", monthlyPrice: 20, seatBased: true, notes: "Best for founders and individual operators." },
-      { id: "team", name: "Team", monthlyPrice: 30, seatBased: true, minTeamSize: 2, notes: "Shared workspace controls for teams." },
-      { id: "enterprise", name: "Enterprise", monthlyPrice: 60, seatBased: true, minTeamSize: 10, notes: "Advanced admin and compliance." },
-    ],
-  },
+  { id: "chatgpt", name: "ChatGPT", vendor: "OpenAI", category: "chat", bestUseCase: "mixed", plans: [
+    { id: "free", name: "Free", monthlyPrice: 0, seatBased: true, notes: "Evaluation and occasional use." },
+    { id: "plus", name: "Plus", monthlyPrice: 20, seatBased: true, notes: "Professional individual usage." },
+    { id: "team", name: "Team", monthlyPrice: 30, seatBased: true, minTeamSize: 2, notes: "Shared team workspace controls." },
+    { id: "enterprise", name: "Enterprise", monthlyPrice: 60, seatBased: true, minTeamSize: 10, notes: "Enterprise governance and compliance." },
+  ] },
   {
     id: "claude",
     name: "Claude",
@@ -23,10 +16,10 @@ export const pricingCatalog: Tool[] = [
     category: "chat",
     bestUseCase: "writing",
     plans: [
-      { id: "free", name: "Free", monthlyPrice: 0, seatBased: true, notes: "Occasional usage." },
+      { id: "free", name: "Free", monthlyPrice: 0, seatBased: true, notes: "Low-volume experimentation." },
       { id: "pro", name: "Pro", monthlyPrice: 20, seatBased: true, notes: "Best for writing-heavy workflows." },
-      { id: "max", name: "Max", monthlyPrice: 40, seatBased: true, notes: "Higher limits for power users." },
       { id: "team", name: "Team", monthlyPrice: 30, seatBased: true, minTeamSize: 2, notes: "Shared collaboration and governance." },
+      { id: "enterprise", name: "Enterprise", monthlyPrice: 65, seatBased: true, minTeamSize: 10, notes: "Enterprise compliance controls." },
     ],
   },
   {
@@ -42,6 +35,18 @@ export const pricingCatalog: Tool[] = [
     ],
   },
   {
+    id: "grok",
+    name: "Grok",
+    vendor: "xAI",
+    category: "chat",
+    bestUseCase: "research",
+    plans: [
+      { id: "free", name: "Free", monthlyPrice: 0, seatBased: true, notes: "Limited queries." },
+      { id: "pro", name: "Pro", monthlyPrice: 30, seatBased: true, notes: "Higher query and reasoning limits." },
+      { id: "enterprise", name: "Enterprise", monthlyPrice: 75, seatBased: true, minTeamSize: 10, notes: "Enterprise policy controls." },
+    ],
+  },
+  {
     id: "cursor",
     name: "Cursor",
     vendor: "Cursor",
@@ -51,6 +56,7 @@ export const pricingCatalog: Tool[] = [
       { id: "free", name: "Free", monthlyPrice: 0, seatBased: true, notes: "Evaluation and light usage." },
       { id: "pro", name: "Pro", monthlyPrice: 20, seatBased: true, notes: "Most teams start here." },
       { id: "business", name: "Business", monthlyPrice: 40, seatBased: true, minTeamSize: 3, notes: "Policy, SSO, and admin controls." },
+      { id: "enterprise", name: "Enterprise", monthlyPrice: 55, seatBased: true, minTeamSize: 10, notes: "Enterprise governance." },
     ],
   },
   {
@@ -76,6 +82,19 @@ export const pricingCatalog: Tool[] = [
       { id: "free", name: "Free", monthlyPrice: 0, seatBased: true, notes: "Basic coding assistant." },
       { id: "pro", name: "Pro", monthlyPrice: 15, seatBased: true, notes: "Solo and small team use." },
       { id: "teams", name: "Teams", monthlyPrice: 30, seatBased: true, minTeamSize: 3, notes: "Team management and controls." },
+      { id: "enterprise", name: "Enterprise", monthlyPrice: 48, seatBased: true, minTeamSize: 10, notes: "Enterprise compliance and controls." },
+    ],
+  },
+  {
+    id: "devin",
+    name: "Devin",
+    vendor: "Cognition",
+    category: "coding",
+    bestUseCase: "coding",
+    plans: [
+      { id: "starter", name: "Starter", monthlyPrice: 49, seatBased: true, notes: "Early autonomous coding usage." },
+      { id: "team", name: "Team", monthlyPrice: 99, seatBased: true, minTeamSize: 3, notes: "Team-level autonomous workflows." },
+      { id: "enterprise", name: "Enterprise", monthlyPrice: 179, seatBased: true, minTeamSize: 10, notes: "Enterprise controls and support." },
     ],
   },
   {
@@ -91,15 +110,39 @@ export const pricingCatalog: Tool[] = [
     ],
   },
   {
+    id: "notion-ai",
+    name: "Notion AI",
+    vendor: "Notion",
+    category: "research",
+    bestUseCase: "writing",
+    plans: [
+      { id: "starter", name: "Starter", monthlyPrice: 10, seatBased: true, notes: "AI add-on for lighter teams." },
+      { id: "business", name: "Business", monthlyPrice: 18, seatBased: true, minTeamSize: 2, notes: "Workspace AI for teams." },
+      { id: "enterprise", name: "Enterprise", monthlyPrice: 30, seatBased: true, minTeamSize: 10, notes: "Enterprise controls and administration." },
+    ],
+  },
+  {
+    id: "midjourney",
+    name: "Midjourney",
+    vendor: "Midjourney",
+    category: "builder",
+    bestUseCase: "mixed",
+    plans: [
+      { id: "basic", name: "Basic", monthlyPrice: 10, seatBased: true, notes: "Creative exploration." },
+      { id: "standard", name: "Standard", monthlyPrice: 30, seatBased: true, notes: "Frequent design teams." },
+      { id: "pro", name: "Pro", monthlyPrice: 60, seatBased: true, notes: "Heavy production workflows." },
+    ],
+  },
+  {
     id: "openai-api",
     name: "OpenAI API",
     vendor: "OpenAI",
     category: "api",
     bestUseCase: "mixed",
     plans: [
-      { id: "starter", name: "Starter", monthlyPrice: 60, seatBased: false, includedMonthlyUsageUsd: 75, notes: "Small product experiments." },
-      { id: "growth", name: "Growth", monthlyPrice: 180, seatBased: false, includedMonthlyUsageUsd: 250, notes: "Production app workloads." },
-      { id: "scale", name: "Scale", monthlyPrice: 500, seatBased: false, includedMonthlyUsageUsd: 700, notes: "Large scale throughput." },
+      { id: "starter", name: "Starter", monthlyPrice: 100, seatBased: false, includedMonthlyUsageUsd: 120, notes: "Early product integration." },
+      { id: "growth", name: "Growth", monthlyPrice: 400, seatBased: false, includedMonthlyUsageUsd: 520, notes: "Production app workloads." },
+      { id: "scale", name: "Scale", monthlyPrice: 900, seatBased: false, includedMonthlyUsageUsd: 1200, notes: "High-volume model traffic." },
     ],
   },
   {
@@ -109,9 +152,33 @@ export const pricingCatalog: Tool[] = [
     category: "api",
     bestUseCase: "writing",
     plans: [
-      { id: "starter", name: "Starter", monthlyPrice: 55, seatBased: false, includedMonthlyUsageUsd: 70, notes: "Early integrations." },
-      { id: "growth", name: "Growth", monthlyPrice: 170, seatBased: false, includedMonthlyUsageUsd: 240, notes: "Reliable production usage." },
-      { id: "scale", name: "Scale", monthlyPrice: 460, seatBased: false, includedMonthlyUsageUsd: 650, notes: "High-volume enterprise usage." },
+      { id: "starter", name: "Starter", monthlyPrice: 90, seatBased: false, includedMonthlyUsageUsd: 110, notes: "Early integrations." },
+      { id: "growth", name: "Growth", monthlyPrice: 360, seatBased: false, includedMonthlyUsageUsd: 480, notes: "Reliable production usage." },
+      { id: "scale", name: "Scale", monthlyPrice: 820, seatBased: false, includedMonthlyUsageUsd: 1100, notes: "High-volume enterprise usage." },
+    ],
+  },
+  {
+    id: "grok-api",
+    name: "Grok API",
+    vendor: "xAI",
+    category: "api",
+    bestUseCase: "research",
+    plans: [
+      { id: "starter", name: "Starter", monthlyPrice: 80, seatBased: false, includedMonthlyUsageUsd: 95, notes: "Initial API integration." },
+      { id: "growth", name: "Growth", monthlyPrice: 320, seatBased: false, includedMonthlyUsageUsd: 430, notes: "Growing product usage." },
+      { id: "scale", name: "Scale", monthlyPrice: 760, seatBased: false, includedMonthlyUsageUsd: 980, notes: "Scale-grade traffic." },
+    ],
+  },
+  {
+    id: "firecrawl-api",
+    name: "Firecrawl API",
+    vendor: "Firecrawl",
+    category: "api",
+    bestUseCase: "research",
+    plans: [
+      { id: "starter", name: "Starter", monthlyPrice: 49, seatBased: false, includedMonthlyUsageUsd: 65, notes: "Light crawl and indexing." },
+      { id: "growth", name: "Growth", monthlyPrice: 199, seatBased: false, includedMonthlyUsageUsd: 260, notes: "Production scrape workloads." },
+      { id: "scale", name: "Scale", monthlyPrice: 499, seatBased: false, includedMonthlyUsageUsd: 700, notes: "High-frequency crawl operations." },
     ],
   },
   {
@@ -122,20 +189,47 @@ export const pricingCatalog: Tool[] = [
     bestUseCase: "coding",
     plans: [
       { id: "free", name: "Free", monthlyPrice: 0, seatBased: true, notes: "Trial UI generation." },
-      { id: "premium", name: "Premium", monthlyPrice: 20, seatBased: true, notes: "Faster iteration and limits." },
+      { id: "pro", name: "Pro", monthlyPrice: 20, seatBased: true, notes: "Faster iteration and limits." },
       { id: "team", name: "Team", monthlyPrice: 50, seatBased: true, minTeamSize: 3, notes: "Collaboration for product teams." },
+      { id: "enterprise", name: "Enterprise", monthlyPrice: 120, seatBased: true, minTeamSize: 10, notes: "Enterprise workflows and controls." },
     ],
   },
   {
-    id: "replit-ai",
-    name: "Replit AI",
-    vendor: "Replit",
+    id: "lovable",
+    name: "Lovable",
+    vendor: "Lovable",
     category: "builder",
     bestUseCase: "coding",
     plans: [
-      { id: "core", name: "Core", monthlyPrice: 20, seatBased: true, notes: "Solo cloud development and AI tooling." },
-      { id: "teams", name: "Teams", monthlyPrice: 35, seatBased: true, minTeamSize: 3, notes: "Team collaboration with governance." },
-      { id: "enterprise", name: "Enterprise", monthlyPrice: 60, seatBased: true, minTeamSize: 10, notes: "Enterprise controls and compliance." },
+      { id: "free", name: "Free", monthlyPrice: 0, seatBased: true, notes: "Testing and prototypes." },
+      { id: "pro", name: "Pro", monthlyPrice: 20, seatBased: true, notes: "Individual product builders." },
+      { id: "team", name: "Team", monthlyPrice: 49, seatBased: true, minTeamSize: 3, notes: "Collaborative app generation." },
+      { id: "business", name: "Business", monthlyPrice: 89, seatBased: true, minTeamSize: 8, notes: "Business-grade controls." },
+    ],
+  },
+  {
+    id: "bolt-new",
+    name: "Bolt.new",
+    vendor: "StackBlitz",
+    category: "builder",
+    bestUseCase: "coding",
+    plans: [
+      { id: "free", name: "Free", monthlyPrice: 0, seatBased: true, notes: "Quick prototyping." },
+      { id: "starter", name: "Starter", monthlyPrice: 20, seatBased: true, notes: "Small project workflows." },
+      { id: "pro", name: "Pro", monthlyPrice: 50, seatBased: true, minTeamSize: 2, notes: "Frequent production usage." },
+      { id: "team", name: "Team", monthlyPrice: 99, seatBased: true, minTeamSize: 5, notes: "Team collaboration and governance." },
+    ],
+  },
+  {
+    id: "langsmith",
+    name: "LangSmith",
+    vendor: "LangChain",
+    category: "builder",
+    bestUseCase: "api",
+    plans: [
+      { id: "developer", name: "Developer", monthlyPrice: 39, seatBased: true, notes: "Tracing and evals for small teams." },
+      { id: "team", name: "Team", monthlyPrice: 99, seatBased: true, minTeamSize: 3, notes: "Shared observability and eval workflows." },
+      { id: "enterprise", name: "Enterprise", monthlyPrice: 199, seatBased: true, minTeamSize: 10, notes: "Enterprise governance and security." },
     ],
   },
 ];

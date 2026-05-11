@@ -1,4 +1,4 @@
-export type UseCase = "coding" | "writing" | "research" | "mixed";
+export type UseCase = "coding" | "writing" | "research" | "mixed" | "api";
 export type ToolCategory = "chat" | "coding" | "research" | "api" | "builder";
 export type RecommendationType = "downgrade" | "consolidate" | "alternative" | "rightsize" | "optimized";
 export type RecommendationConfidence = "High confidence" | "Moderate confidence";
@@ -48,6 +48,10 @@ export interface AuditRecommendation {
 
 export interface AuditResult {
   id: string;
+  /** Row id from Supabase `audits` after POST /api/audits (used to persist `ai_summary`). */
+  supabaseAuditId?: string;
+  /** Cached AI narrative; mirrored in localStorage for stable reloads. */
+  aiSummary?: string;
   selections: UserSelection[];
   teamSize: number;
   useCase: UseCase;

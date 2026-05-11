@@ -6,7 +6,7 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
   const { id } = await params;
 
   return (
-    <main className="flex-1 bg-zinc-950 px-6 py-14 text-zinc-100">
+    <main className="flex-1 bg-zinc-950 px-4 py-10 text-zinc-100 sm:px-6 sm:py-14">
       <div className="mx-auto max-w-5xl">
         <Suspense
           fallback={

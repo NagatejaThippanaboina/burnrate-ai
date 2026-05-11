@@ -26,6 +26,8 @@ const conservativeSavings = (baseline: number, optimized: number): number => {
   return Math.min(raw, capped);
 };
 
+const DEBUG_AUDIT = process.env.NEXT_PUBLIC_DEBUG_AUDIT === "1";
+
 const pickCheapestSuitablePlan = (tool: Tool, teamSize: number, currentPlan?: Plan): Plan => {
   const candidates = tool.plans.filter((plan) => {
     if (plan.minTeamSize && teamSize < plan.minTeamSize) return false;
@@ -142,7 +144,41 @@ const buildToolRecommendation = (
     }
   }
 
-  const alternativeCategory = tool.category === "api" || useCase === "mixed" ? "api" : useCase === "coding" ? "coding" : tool.category;
+  // If measured spend is materially above what the current plan + seat math implies,
+  // recommend right-sizing seats / inactive licenses back toward the plan baseline.
+  // This stays deterministic and grounded in user input + pricing data (no arbitrary % savings).
+  if (currentPlan.seatBased && currentExpected > 0 && currentSpend > currentExpected * 1.15) {
+    const target = roundMoney(currentExpected);
+    const monthlySavings = conservativeSavings(baseline, target);
+    if (monthlySavings > 0) {
+      return {
+        key: `${tool.id}-seat-rightsize`,
+        toolId: tool.id,
+        toolName: tool.name,
+        currentPlan: currentPlan.name,
+        recommendedPlan: currentPlan.name,
+        currentMonthlySpend: baseline,
+        optimizedMonthlySpend: target,
+        monthlySavings,
+        annualSavings: roundMoney(monthlySavings * 12),
+        recommendationType: "rightsize",
+        category: "Usage Fit",
+        confidence: "Moderate confidence",
+        reasoning: makeReasoning(
+          `Reported spend ($${currentSpend.toFixed(2)}) is above the expected ${currentPlan.name} seat cost ($${currentExpected.toFixed(2)}).`,
+          `Right-size unused seats/licenses to bring spend back in line with team usage.`,
+        ),
+        badge: "Seat Right-Sizing",
+      };
+    }
+  }
+
+  const alternativeCategory =
+    tool.category === "api" || useCase === "mixed" || useCase === "api"
+      ? "api"
+      : useCase === "coding"
+        ? "coding"
+        : tool.category;
   const alternative = pricingCatalog
     .filter(
       (candidate) =>
@@ -179,6 +215,7 @@ const buildToolRecommendation = (
     }
   }
 
+  // If there is effectively no spend, treat as already optimized.
   return {
     key: `${tool.id}-optimized`,
     toolId: tool.id,
@@ -253,6 +290,10 @@ const stableAuditId = (input: AuditInput): string => {
 };
 
 export const runAudit = (input: AuditInput): AuditResult => {
+  if (DEBUG_AUDIT) {
+    console.log("AUDIT INPUT:", input);
+  }
+
   const hasApiSelection = input.tools.some((selection) => findTool(selection.toolId)?.category === "api");
   const baseRecommendations = input.tools
     .map((selection) => buildToolRecommendation(selection, input.teamSize, input.useCase))
@@ -283,7 +324,13 @@ export const runAudit = (input: AuditInput): AuditResult => {
   });
 
   const totalCurrentMonthlySpend = roundMoney(
-    input.tools.reduce((sum, selection) => sum + Math.max(0, selection.monthlySpend), 0),
+    input.tools.reduce((sum, selection) => {
+      const tool = findTool(selection.toolId);
+      const plan = tool?.plans.find((candidate) => candidate.id === selection.planId);
+      const expected = plan ? expectedPlanCost(plan, input.teamSize) : 0;
+      const baseline = Math.max(0, selection.monthlySpend, expected);
+      return sum + baseline;
+    }, 0),
   );
   const totalMonthlySavings = roundMoney(recommendations.reduce((sum, recommendation) => sum + recommendation.monthlySavings, 0));
   const totalOptimizedMonthlySpend = Math.max(0, roundMoney(totalCurrentMonthlySpend - totalMonthlySavings));
@@ -291,7 +338,7 @@ export const runAudit = (input: AuditInput): AuditResult => {
   const rawSavingsRate = totalCurrentMonthlySpend > 0 ? roundMoney((totalMonthlySavings / totalCurrentMonthlySpend) * 100) : 0;
   const savingsRate = Math.min(rawSavingsRate, 65);
 
-  return {
+  const result: AuditResult = {
     id: stableAuditId(input),
     selections: input.tools,
     teamSize: input.teamSize,
@@ -305,4 +352,10 @@ export const runAudit = (input: AuditInput): AuditResult => {
     isOptimized: totalMonthlySavings < 1,
     createdAt: new Date().toISOString(),
   };
+
+  if (DEBUG_AUDIT) {
+    console.log("CALCULATED OUTPUT:", result);
+  }
+
+  return result;
 };

@@ -8,21 +8,21 @@ export default function Home() {
   return (
     <main className="relative flex-1 overflow-hidden bg-zinc-950 text-zinc-100">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(139,92,246,0.16),transparent_40%),radial-gradient(circle_at_80%_10%,rgba(59,130,246,0.18),transparent_36%)]" />
-      <div className="mx-auto max-w-6xl px-6 py-16 md:py-24">
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 md:py-24">
         <section className="space-y-8 text-center md:text-left">
           <Badge className="bg-violet-500/20 text-violet-100">BURNRATE AI</Badge>
-          <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-white md:text-6xl">
+          <h1 className="max-w-3xl text-3xl font-semibold tracking-tight text-white sm:text-4xl md:text-6xl">
             Stop leaking budget across AI tools. Audit your burn in minutes.
           </h1>
           <p className="max-w-2xl text-zinc-300">
             BURNRATE AI analyzes your current stack, benchmarks plan efficiency, and shows deterministic monthly and
             yearly savings opportunities with explainable recommendations.
           </p>
-          <div className="flex flex-wrap gap-3">
-            <Button asChild className="bg-violet-500 text-white hover:bg-violet-400">
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <Button asChild className="w-full bg-violet-500 text-white hover:bg-violet-400 sm:w-auto">
               <Link href="/audit">Start Free Audit</Link>
             </Button>
-            <Button asChild variant="outline" className="border-white/20 bg-transparent">
+            <Button asChild variant="outline" className="w-full border-white/20 bg-transparent sm:w-auto">
               <a href="#features">See product highlights</a>
             </Button>
           </div>

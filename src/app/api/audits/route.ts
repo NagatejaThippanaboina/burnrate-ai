@@ -15,7 +15,7 @@ type AuditPayload = {
 };
 
 const isUseCase = (value: unknown): value is UseCase =>
-  value === "coding" || value === "writing" || value === "research" || value === "mixed";
+  value === "coding" || value === "writing" || value === "research" || value === "mixed" || value === "api";
 
 const isValidAuditPayload = (payload: unknown): payload is AuditPayload => {
   if (!payload || typeof payload !== "object") return false;
@@ -41,24 +41,28 @@ export async function POST(request: Request) {
     }
 
     const supabase = getSupabaseServerClient();
-    const { error } = await supabase.from("audits").insert([
-      {
-        selected_tools: payload.selectedTools,
-        plans: payload.plans,
-        monthly_spend: payload.monthlySpend,
-        annual_savings: payload.annualSavings,
-        recommendations: payload.recommendations as unknown as Json,
-        team_size: payload.teamSize,
-        use_case: payload.useCase,
-        created_at: payload.createdAt,
-      },
-    ]);
+    const { data, error } = await supabase
+      .from("audits")
+      .insert([
+        {
+          selected_tools: payload.selectedTools,
+          plans: payload.plans,
+          monthly_spend: payload.monthlySpend,
+          annual_savings: payload.annualSavings,
+          recommendations: payload.recommendations as unknown as Json,
+          team_size: payload.teamSize,
+          use_case: payload.useCase,
+          created_at: payload.createdAt,
+        },
+      ])
+      .select("id")
+      .single();
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, id: data?.id ?? null });
   } catch {
     return NextResponse.json({ error: "Failed to save audit." }, { status: 500 });
   }
