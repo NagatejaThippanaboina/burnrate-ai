@@ -3,6 +3,25 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import type { Metadata } from "next";
+export const metadata: Metadata = {
+  title: "BURNRATE AI — AI Spend Audit Platform",
+  description:
+    "Audit AI tool spending, reduce SaaS burn, and discover optimization opportunities across ChatGPT, Claude, Cursor, Copilot, Gemini, and more.",
+  openGraph: {
+    title: "BURNRATE AI",
+    description:
+      "Stop leaking budget across AI tools. Audit your burn in minutes.",
+    images: ["/og-image.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "BURNRATE AI",
+    description:
+      "Stop leaking budget across AI tools. Audit your burn in minutes.",
+    images: ["/og-image.png"],
+  },
+};
 
 export default function Home() {
   return (
@@ -128,7 +147,7 @@ export default function Home() {
         </section>
 
         <section className="mt-16 rounded-2xl border border-violet-300/25 bg-violet-900/15 p-8 text-center">
-          <p className="text-zinc-300">Ready to cut AI burnrate with explainable recommendations?</p>
+          <p className="text-zinc-300">  Ready to reduce AI spend without sacrificing productivity?</p>
           <Button asChild className="mt-4 bg-violet-500 text-white hover:bg-violet-400">
             <Link href="/audit">Start Free Audit</Link>
           </Button>

@@ -107,6 +107,7 @@ export function ResultView({ result }: { result: AuditResult }) {
         companyName: payload.companyName,
         role: payload.role,
         source,
+        website: "",
       }),
     });
 
@@ -319,6 +320,12 @@ export function ResultView({ result }: { result: AuditResult }) {
               onChange={(event) => setLead((current) => ({ ...current, email: event.target.value }))}
             />
             <Input
+              type="text"
+              name="website"
+              className="hidden"
+              autoComplete="off"
+            />
+            <Input
               placeholder="Company (optional)"
               value={lead.companyName}
               onChange={(event) => setLead((current) => ({ ...current, companyName: event.target.value }))}
@@ -374,6 +381,12 @@ export function ResultView({ result }: { result: AuditResult }) {
                 placeholder="Email"
                 value={talkLead.email}
                 onChange={(event) => setTalkLead((current) => ({ ...current, email: event.target.value }))}
+              />
+              <Input
+                type="text"
+                name="website"
+                className="hidden"
+                autoComplete="off"
               />
               <Input
                 placeholder="Company name (optional)"
