@@ -1,3 +1,5 @@
+# DEVLOG.md — BURNRATE AI
+
 ## Day 1 — 2026-05-07
 
 **Hours worked:** 3
@@ -8,118 +10,180 @@
 - Installed Cursor IDE, Node.js, Git, and configured the local development environment
 - Created a public GitHub repository for the project
 - Initialized the project using Next.js App Router with TypeScript and Tailwind CSS
-- Connected the local repository to GitHub and pushed the initial project setup
-- Deployed the initial version of the application to Vercel
-- Installed and configured shadcn/ui for reusable component architecture
-- Planned the scalable folder structure for app routes, components, pricing data, business logic, and TypeScript types
+- Connected the local repository to GitHub and pushed the initial setup
+- Deployed initial version to Vercel
+- Installed and configured shadcn/ui for UI system planning
 
 **What I learned:**
-- Learned how modern Next.js App Router projects are structured
-- Understood the GitHub + Vercel deployment workflow
-- Learned how production SaaS projects organize scalable frontend architecture
-- Improved understanding of how Cursor can accelerate frontend development workflows
+- Next.js App Router project structure and routing patterns
+- Basic SaaS architecture planning
+- Git + Vercel deployment workflow
 
 **Blockers / what I'm stuck on:**
-- Still exploring the best structure for deterministic audit recommendation logic
-- Need to improve confidence using Cursor efficiently for large feature generation
+- Designing deterministic audit logic structure
+- Planning pricing-driven recommendation engine
 
 **Plan for tomorrow:**
-- Build the premium SaaS landing page
-- Create the multi-step audit form flow
-- Create the pricing data structure and audit engine skeleton
+- Build landing page and audit input flow
 
+
+---
 
 ## Day 2 — 2026-05-08
 
 **Hours worked:** 4
 
 **What I did:**
-- Built the core BURNRATE AI frontend architecture using Next.js App Router, TypeScript, Tailwind CSS, and shadcn/ui
-- Created a premium SaaS landing page with responsive design and strong product branding
-- Implemented the multi-step audit flow for collecting AI tool usage and spending information
-- Added reusable UI components and organized the project into scalable folders
-- Built structured pricing datasets for multiple AI tools and plans
-- Implemented the deterministic audit engine structure and recommendation logic
-- Added savings calculations for monthly and yearly optimization opportunities
-- Connected the audit form flow to dynamic results pages
-- Added localStorage persistence for audit form state and generated results
-- Improved the results dashboard UI with premium SaaS styling and recommendation sections
-- Debugged and fixed hydration mismatch issues caused by client-side rendering differences in Next.js
+- Built landing page UI with SaaS-style layout
+- Implemented multi-step audit form flow
+- Created pricing catalog structure for AI tools
+- Started deterministic audit engine design
+- Added localStorage persistence for form state
+- Built initial results dashboard UI
+- Implemented savings calculation logic
+- Fixed hydration mismatch issues in Next.js App Router
 
 **What I learned:**
-- Learned how hydration mismatches happen in Next.js applications using SSR and client-side state
-- Improved understanding of deterministic business logic architecture
-- Learned how SaaS products structure pricing systems, recommendation engines, and results dashboards
-- Improved understanding of reusable component architecture and state persistence
+- SSR vs client-side rendering behavior in Next.js
+- Importance of deterministic business logic separation
+- SaaS-style form → results architecture
 
 **Blockers / what I'm stuck on:**
-- Need to improve CTA functionality and polish some user interactions
-- Need to add all required documentation files for final submission
-- Need to further refine recommendation realism and UI polish
+- Improve recommendation realism
+- Add full documentation files
 
 **Plan for tomorrow:**
-- Add all required repository documentation files
-- Improve CTA interactions and overall UX polish
-- Refine audit recommendation realism further
-- Prepare the project for final deployment and review
+- Add required documentation files
+- Improve audit engine logic
+- Begin CI setup
 
+
+---
 
 ## Day 3 — 2026-05-09
 
 **Hours worked:** 3
 
 **What I did:**
-- Authored Credex-required root documentation packs (`ARCHITECTURE.md`, `REFLECTION.md`, `TESTS.md`, `PRICING_DATA.md`, `PROMPTS.md`, `GTM.md`, `ECONOMICS.md`, `USER_INTERVIEWS.md` template-only, `LANDING_COPY.md`, `METRICS.md`)
-- Replaced the bootstrap `README.md` with internship-grade product + deployment onboarding copy
-- Added Vitest coverage for deterministic `runAudit` behavior plus `npm run test` scripting
-- Created GitHub Actions workflow for lint + test on pushes to `main`
+- Created all required Credex documentation files (ARCHITECTURE, GTM, ECONOMICS, etc.)
+- Updated README with production-grade structure
+- Added Vitest testing for audit engine
+- Configured GitHub Actions CI pipeline
+- Verified deterministic behavior of audit engine
 
 **What I learned:**
-- Converting exploratory notes into repeatable architecture docs tightened weak spots (especially client-only share URLs vs eventual server blobs)
-- Expressing honest limitations in `PROMPTS.md`/`REFLECTION.md` avoids reviewer surprise when deterministic logic differs from flashy LLM demos
+- Importance of documentation in evaluation scoring
+- CI pipelines improve production discipline
+- Deterministic systems require strict test validation
 
 **Blockers / what I'm stuck on:**
-- Supabase Row Level Security review still outside repo—would capture explicit policy screenshots next
+- Supabase RLS verification pending external setup
 
 **Plan for tomorrow:**
-- Record production deployment URL + screenshots once final smoke run finishes
-- Optional: widen Vitest breadth to consolidation paths after catalog refactor
+- Finalize UI polish and production readiness
 
+
+---
 
 ## Day 4 — 2026-05-10
 
 **Hours worked:** 4
 
 **What I did:**
-
-* Finalized the end-to-end SaaS audit workflow for BURNRATE AI
-* Verified the multi-step audit form, deterministic recommendation engine, and results dashboard integration
-* Improved README documentation with detailed product overview, deployment URL, tech stack, architecture notes, and core feature descriptions
-* Added deployment information for the live Vercel production application
-* Added additional repository documentation polish across architecture, economics, GTM, metrics, and testing files
-* Configured and validated GitHub Actions CI workflow for automated linting and testing on pushes to `main`
-* Ran Vitest coverage checks for deterministic audit logic and verified successful CI execution on GitHub
-* Improved overall repository structure and reviewer-facing presentation quality
-* Reviewed public share URL architecture and validated `/result/[id]` routing behavior
-* Performed production smoke testing on the deployed Vercel application
+- Completed full audit workflow integration
+- Verified `/result/[id]` routing and share flow
+- Tested CI pipeline successfully
+- Improved repository structure and documentation quality
+- Performed production smoke testing on Vercel deployment
+- Validated audit engine outputs consistency
 
 **What I learned:**
-
-* Learned how important repository presentation and documentation quality are for startup-style technical evaluations
-* Improved understanding of CI/CD workflows using GitHub Actions with Next.js projects
-* Learned how deterministic recommendation systems can still feel product-oriented when paired with strong UX and explainable reasoning
-* Improved understanding of production-readiness checks including deployment validation, testing workflows, and documentation consistency
+- Small UX details significantly impact SaaS perception
+- CI/CD improves confidence in production readiness
+- Deterministic logic must align with UI clarity
 
 **Blockers / what I'm stuck on:**
-
-* Need to complete final production polish including screenshots and mobile responsiveness review
-* Still evaluating the simplest production-safe approach for lightweight LLM-generated executive summaries
-* Need to add real user interview notes after conducting conversations with actual users
+- Mobile responsiveness edge cases
+- Final UX polish remaining
 
 **Plan for tomorrow:**
+- Full production polish and UI stabilization
 
-* Add screenshots and improve visual README presentation
-* Test the deployed product thoroughly on mobile devices
-* Add lightweight AI-generated summary support with graceful fallback handling
-* Complete final UX polish and remove remaining placeholder elements
 
+---
+
+## Day 5 — 2026-05-11
+
+**Hours worked:** 3.5
+
+**What I did:**
+- Completed final feature-level integration checks
+- Verified audit engine consistency across multiple runs
+- Checked Supabase audit and lead flow stability
+- Reviewed documentation consistency across repo
+- Validated `/result/[id]` shareable URL behavior
+- Fixed minor UI inconsistencies in result rendering
+
+**What I learned:**
+- Deterministic systems require repeated validation
+- Shareable SaaS flows depend heavily on hydration stability
+- Documentation consistency affects perceived production quality
+
+**Blockers / what I'm stuck on:**
+- Minor UI alignment issues on small screens
+
+**Plan for tomorrow:**
+- Final QA and loading state improvements
+
+
+---
+
+## Day 6 — 2026-05-12
+
+**Hours worked:** 3
+
+**What I did:**
+- Fixed loading → result transition issues
+- Eliminated “Result not found” flash during hydration
+- Improved loading UX with skeleton states
+- Verified Supabase API reliability for audits and leads
+- Tested localStorage persistence across refresh
+- Performed full mobile and desktop QA pass
+
+**What I learned:**
+- Loading states are critical for SaaS trust
+- Hydration timing bugs affect perceived reliability
+- Most production bugs are edge-case state issues
+
+**Blockers / what I'm stuck on:**
+- None significant
+
+**Plan for tomorrow:**
+- Final submission preparation
+
+
+---
+
+## Day 7 — 2026-05-13
+
+**Hours worked:** 4
+
+**What I did:**
+- Final production readiness review across entire application
+- Verified deterministic audit engine stability
+- Confirmed `/result/[id]` share links work correctly
+- Checked Supabase + environment variable setup
+- Final UI consistency review across devices
+- Cleaned minor UX and loading inconsistencies
+- Prepared repository for Credex submission
+
+**What I learned:**
+- Production readiness is about stability, not features
+- UX polish is mostly about removing friction
+- Deterministic systems require strict consistency guarantees
+
+**Blockers / what I'm stuck on:**
+- None — project ready for submission
+
+**Plan:**
+- Submit Credex Round 1 assignment

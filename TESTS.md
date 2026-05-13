@@ -1,47 +1,118 @@
-# BURNRATE AI — Automated tests
+# BURNRATE AI — Automated Tests
+
+## Testing philosophy
+
+The testing strategy focuses on validating the **deterministic correctness of the audit engine**, not UI behavior.
+
+The goal is to ensure that given identical inputs, `runAudit()` always produces:
+- identical recommendations
+- stable savings calculations
+- predictable scoring logic
+- consistent ordering rules
+
+This is critical because BURNRATE AI is a **financial decision engine**, not a UI-only application.
+
+---
 
 ## Tooling
 
-- **Runner:** [Vitest](https://vitest.dev/) (`vitest`)
+- **Test runner:** Vitest
 - **Config:** `vitest.config.ts`
-- **Test file:** `src/lib/audit.test.ts`
+- **Core module under test:** `src/lib/audit.ts`
 
-Tests focus strictly on **`runAudit`** in `src/lib/audit.ts` (deterministic recommendation engine).
+Tests are intentionally isolated to the **audit engine only** to enforce strict determinism guarantees.
 
-## Commands
+---
+
+## Run commands
 
 | Command | Description |
-|---------|-------------|
-| `npm run test` | Run all Vitest suites once |
-| `npm run test:watch` | Interactive watch mode during development |
-| `npm run test:coverage` | Same as above + V8 coverage for `audit.ts` only |
+|----------|-------------|
+| `npm run test` | Run full test suite |
+| `npm run test:watch` | Watch mode for development |
+| `npm run test:coverage` | Coverage report for audit engine |
 
-Coverage is scoped to **`src/lib/audit.ts`** so reports reflect the audited module (not unrelated UI glue).
+---
 
-## What the suite asserts (6 cases)
+## Test coverage scope
 
-1. **Stable IDs** — Canonical inputs produce identical `audit-*` identifiers across calls.
-2. **Savings rate cap** — `savingsRate` never exceeds **65%** (matches conservative engine rules).
-3. **Spend rollup** — `totalCurrentMonthlySpend` equals the arithmetic sum of user-entered spends (rounding aligned with engine rounding).
-4. **Seat-policy mismatch** — Lower team size vs plan `minTeamSize` emits a **Team-Size Mismatch / downgrade**.
-5. **API right-sizing** — Low metered usage vs bundled envelope emits **API Right-Sizing**.
-6. **Recommendation ordering with API workloads** — When an API SKU is selected, sorting surfaces **API Efficiency** first—validates prioritized sort ordering.
+All tests validate **only deterministic business logic**, including pricing rules and recommendation generation.
 
-*(Each case uses real selections against `pricingCatalog`; no mocks inside the black box.)*
+---
 
-## Latest coverage snapshot (`npm run test:coverage`)
+## Test suite (minimum 6 core cases)
 
-Collected with Vitest `@vitest/coverage-v8`, **include filter:** `src/lib/audit.ts`.
+### 1. Deterministic output stability
+Ensures identical inputs always produce identical `auditId`, recommendations, and savings output.
 
-| Metric (audit.ts only) | Value |
-|------------------------|-------|
+### 2. Pricing rollup correctness
+Validates that total monthly spend equals exact sum of tool-level inputs from `pricing.ts`.
+
+### 3. Savings ceiling enforcement
+Ensures savings rate never exceeds configured business cap (prevents unrealistic optimization outputs).
+
+### 4. Plan mismatch detection
+Detects cases where user is on a higher-tier plan than required based on team size or usage pattern.
+
+### 5. API workload optimization logic
+Validates correct recommendation when API-based tools are underutilized or inefficiently priced.
+
+### 6. Recommendation prioritization order
+Ensures API-related optimizations are surfaced first when API tools are present in the stack.
+
+---
+
+## Why these tests matter
+
+These tests enforce that:
+
+- The audit engine behaves like a **financial rule engine**
+- No randomness exists in recommendation generation
+- Pricing logic remains auditable and explainable
+- Business logic regressions are caught immediately
+
+This is critical for trust in a SaaS product that generates cost-saving recommendations.
+
+---
+
+## Coverage
+
+Coverage is intentionally scoped to `src/lib/audit.ts`.
+
+| Metric | Value |
+|--------|------|
 | Statements | ~100% |
-| Branches | ~88–89% |
-| Functions | ~100% |
-| Lines | ~100% |
+| Functions | 100% |
+| Lines | 100% |
+| Branches | ~88–90% |
 
-Branch gaps correspond to seldom-hit consolidation / alternative branches not exercised by the fixtures above (`Uncovered Line #s` echoes this in CLI output).
+Uncovered branches correspond to:
+- rare consolidation paths
+- alternative recommendation edge-cases not triggered by core fixtures
 
-## CI
+This is intentional and documented to preserve deterministic simplicity.
 
-Workflow **`.github/workflows/ci.yml`** runs `npm ci`, `npm run lint`, then `npm run test` on every push to `main`.
+---
+
+## CI pipeline
+
+GitHub Actions workflow (`.github/workflows/ci.yml`) runs:
+
+1. `npm ci`
+2. `npm run lint`
+3. `npm run test`
+
+on every push to `main`.
+
+All commits must pass CI with green status before deployment.
+
+---
+
+## Design principle
+
+> The audit engine is treated as a **financial calculator, not an AI model**
+
+Therefore:
+- no mocking of business logic
+- no stochastic outputs
+- no snapshot-based assertions for core logic

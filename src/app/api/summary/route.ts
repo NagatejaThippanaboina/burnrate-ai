@@ -97,7 +97,7 @@ export async function POST(request: Request) {
       console.log("AUDIT ID:", auditRowId ?? "unknown");
     }
 
-    const summary = generateDynamicSummary(summaryInput);
+    const summary = await generateDynamicSummary(summaryInput);
 
     // Temporary debug logs (required by task)
     console.log("SUMMARY OUTPUT:", summary);

@@ -1,54 +1,142 @@
-# Landing copy source of truth — BURNRATE AI
-
-All strings below intentionally mirror **`src/app/page.tsx`** hero + downstream sections unless noted.
+# LANDING_COPY.md — Landing Page Copy (BURNRATE AI)
 
 ## Eyebrow
 
 `BURNRATE AI`
 
-## Headline
+---
 
-> Stop leaking budget across AI tools. Audit your burn in minutes.
+## Hero headline
+
+> Stop overspending on AI tooling.
+
+---
 
 ## Subheadline
 
-> BURNRATE AI analyzes your current stack, benchmarks plan efficiency, and shows deterministic monthly and yearly savings opportunities with explainable recommendations.
+> Audit copilots, APIs, and AI subscriptions with deterministic savings recommendations built for technical teams and finance stakeholders.
 
-## Primary CTA button
+---
 
-Label: **Start Free Audit** (`/audit`)
+## Primary CTA
 
-## Secondary link
+**Start Free Audit**
 
-Anchor: `#features`, label: **See product highlights**
+Destination: `/audit`
 
-## Audience chips (social proof scaffolding)
+---
 
-Rendered as stacked cards—not quotes:
+## Secondary CTA
 
-- **YC founders**  
-- **Seed to Series B teams**  
-- **AI-first product orgs**  
+**See product highlights**
 
-## Feature trio
+Anchor: `#features`
 
-1. **Multi-vendor AI spend tracking**
-2. **Deterministic optimization engine**
-3. **Shareable investor-ready reports**
+---
 
-## How it works (numbered)
+## Social proof block *(mocked for prototype/demo purposes)*
 
-| Step | Body |
-|------|------|
-| 1 | Select tools and plans |
-| 2 | Enter monthly spend and team profile |
-| 3 | Get savings map and share link |
+### Mocked customer signals
 
-## Example stats (marketing illustration)
+- “Identified 28% unnecessary AI tooling overlap across engineering subscriptions.” — Mocked startup audit
+- “Helped consolidate multiple copilots into a lower-cost standardized stack.” — Mocked operator report
+- “Finance finally had a readable explanation for rising AI spend.” — Mocked founder feedback
 
-Displayed as illustrative cards on landing—tie to illustrative scenario not user-specific totals:
+### Mocked usage metrics
 
-| Card | Amount | Footnote microcopy |
-|------|--------|--------------------|
-| A | \$1,240/month | Consolidated coding stack + API tier right-sizing |
-| B | \$780/month | Plan downgrade without capability loss |
+- 150+ simulated AI tooling audits
+- Teams benchmarked across copilots, APIs, and workflow tooling
+- Shareable deterministic reports designed for internal budgeting conversations
+
+> Note: Social proof above is illustrative only and included for prototype/demo presentation purposes.
+
+---
+
+## Audience positioning
+
+Built for:
+
+- AI-native startups
+- Engineering-led product teams
+- Seed to Series B companies
+- Technical founders managing growing AI tooling spend
+
+---
+
+## Core value propositions
+
+### 1. Multi-vendor AI spend visibility
+
+Track subscriptions and API usage across multiple AI vendors in one audit workflow.
+
+### 2. Deterministic optimization engine
+
+Every recommendation is generated from explainable pricing and optimization logic — not opaque AI scoring.
+
+### 3. Shareable operational reports
+
+Generate finance-readable audit reports designed for founders, operators, and engineering stakeholders.
+
+---
+
+## How it works
+
+| Step | Description |
+|---|---|
+| 1 | Select your AI tools, plans, and estimated usage |
+| 2 | Add team size and operational context |
+| 3 | Receive deterministic savings recommendations and a shareable audit report |
+
+---
+
+## Example optimization scenarios *(illustrative examples)*
+
+| Scenario | Example impact |
+|---|---|
+| Copilot consolidation | Save ~$1,240/month by removing overlapping coding subscriptions |
+| API right-sizing | Reduce unnecessary API spend by selecting more appropriate usage tiers |
+| Plan optimization | Downgrade underutilized subscriptions without reducing workflow capability |
+
+---
+
+## FAQ
+
+### 1. How are recommendations generated?
+
+All recommendations are generated through deterministic pricing and optimization rules using verified vendor pricing references. The audit engine does not generate random or opaque savings estimates.
+
+---
+
+### 2. Does the product use AI to calculate savings?
+
+No. Financial calculations and optimization logic are deterministic and reproducible. AI-assisted summaries are treated only as a future presentation layer, not as the source of financial truth.
+
+---
+
+### 3. Which AI tools are supported?
+
+The current audit engine supports major AI tooling categories including:
+
+- ChatGPT
+- Claude
+- Gemini
+- GitHub Copilot
+- Cursor
+- Windsurf
+- OpenAI API
+- Anthropic API
+- v0 by Vercel
+
+Additional vendors can be added as pricing coverage expands.
+
+---
+
+### 4. Can audit results be shared internally?
+
+Yes. Every audit generates a shareable report URL designed for collaboration across engineering, founders, operations, and finance teams.
+
+---
+
+### 5. Who is this product designed for?
+
+BURNRATE AI is designed primarily for AI-native startups and technical teams managing rapidly growing AI tooling and API spend before formal FinOps processes exist.

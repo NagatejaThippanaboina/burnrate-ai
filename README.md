@@ -15,6 +15,7 @@ Deterministic SaaS funnel for benchmarking **multi-vendor AI tool spend**. Teams
 - Persistent audit state across reloads
 - High-savings Credex consultation funnel
 - Deterministic finance-readable optimization logic
+- Optional AI-generated executive summary layer (post-deterministic rendering only, does not affect calculations)
 
 ### Email System
 
@@ -134,6 +135,7 @@ Use these reviewer-friendly scenarios in `/audit` (or click the in-app **Try Dem
 | Persistence client | Root `lib/supabase.ts` with typed wrappers |
 
 Detailed diagram lives in **`ARCHITECTURE.md`**.
+> All financial outputs are fully deterministic and reproducible from src/lib/audit.ts using static pricing catalogs. AI is strictly optional and used only for narrative presentation.
 
 ---
 

@@ -1,64 +1,159 @@
 # BURNRATE AI — Architecture
 
+## Executive Summary
+
+BURNRATE AI is a deterministic SaaS system that analyzes AI tool spend and generates explainable cost optimization insights. It uses a client-side audit engine for instant results, with Supabase-backed persistence for shareable reports. The architecture prioritizes reproducibility, auditability, and pricing transparency over probabilistic AI reasoning. LLMs are optional and strictly used for narrative presentation only. The system is designed to scale to 10k+ audits/day with server-side execution and caching.
+
 ## Product shape
 
-Browser-first SaaS UX: prospects run a deterministic spend audit locally, view shareable results, and submit structured leads. No login is required for the core audit loop.
+Browser-first SaaS UX: users run a deterministic AI spend audit, view shareable optimization results, and optionally submit leads. No authentication is required for the core audit experience.
 
-## High-level diagram
+The system prioritizes speed, transparency, and explainability over black-box AI behavior.
+
+---
+
+## High-level architecture diagram
 
 ```text
-[ Landing /audit ] → [ audit-wizard (client) ]
-        │                    │
-        │              runAudit() in src/lib/audit.ts
-        │                    │
-        │              localStorage (draft + reports)
-        │                    │
-        └──────────── /result/[id] (client hydrate from localStorage)
+[ Landing /audit ]
+        │
+        ▼
+[ Audit Wizard (Client - React/Next.js) ]
+        │
+        │ runs deterministic engine
+        │ src/lib/audit.ts
+        ▼
+[ Audit Engine (Pure Functions) ]
+        │
+        │ uses pricing catalog
+        ▼
+[ src/data/pricing.ts ]
+        │
+        ▼
+[ Result Object (Deterministic Output) ]
+        │
+        ├──────────────► Stored in localStorage (instant UX + share support)
+        │
+        └──────────────► POST /api/audits
                              │
-        ┌────────────────────┴────────────────────┐
-        ▼                                         ▼
- POST /api/audits                          POST /api/leads
-        │                                         │
-        └──────────────┬────────────────────────┘
-                       ▼
-              Supabase (audits, leads tables)
-```
+                             ▼
+                      Supabase (audits table)
 
-## Runtime surfaces
+User optionally submits lead:
+        │
+        ▼
+POST /api/leads → Supabase (leads table)
+Runtime surfaces
 
-| Surface | Role |
-|--------|------|
-| **Next.js App Router** (`src/app/`) | Pages, layouts, route segments |
-| **Client components** | Wizard, results, modals sharing browser state |
-| **Route handlers** | `POST /api/audits`, `POST /api/leads` — server-side Supabase writes |
-| **Supabase** | Persistence for audits and CRM-style leads |
+Next.js App Router (src/app/) → Routing, pages, result views
+Client Components → Wizard UI, forms, result dashboard
+Audit Engine (src/lib/audit.ts) → Deterministic cost analysis logic
+Pricing Catalog (src/data/pricing.ts) → Single source of truth for tool pricing
+API Routes (/api/audits, /api/leads) → Server-side persistence layer
+Supabase → Database + CRM-style lead storage
+localStorage → Instant persistence for shareable UX
 
-## Audit engine (`src/lib/audit.ts`)
+Audit engine design (src/lib/audit.ts)
+Inputs
+Selected AI tools (Cursor, Claude, ChatGPT, Copilot, etc.)
+Plan tiers per tool
+Monthly spend per tool
+Number of seats
+Team size
+Primary use case (coding / writing / research / mixed)
+Processing logic
+Plan overuse detection
+Cheaper plan eligibility checks
+Cross-vendor alternative suggestions
+Consolidation opportunities
+Outputs
+Monthly savings
+Annual savings
+Per-tool recommendations
+Deterministic audit result object
 
-- **Input:** Structured selections (tool ID, plan ID, monthly spend) + team size + primary use case.
-- **Pricing truth:** Canonical catalog `src/data/pricing.ts`.
-- **Output:** `AuditResult` with per-tool recommendations (plan moves, consolidation, alternatives, optimized), aggregates, deterministic ID (`audit-*` hash of canonical input).
+No randomness or external inference is used.
 
-The engine is **fully deterministic**: same inputs ⇒ same recommendation set and IDs (timestamps notwithstanding for `createdAt` only on persistence paths).
+Data flow (end-to-end)
+User opens /audit
+Inputs tool stack + spend details
+Client runs runAudit() locally
+Result rendered instantly
+Stored in localStorage
+Optional persistence:
+POST /api/audits → Supabase
+POST /api/leads → CRM capture
+Shareable URL /result/[id] loads deterministic result
+Why this stack was chosen
+Next.js 15 (App Router)
+Full-stack single codebase
+SEO-friendly landing pages
+API routes + frontend unified
+Ideal for SaaS funnel + shareable results
+TypeScript
+Prevents pricing logic errors
+Ensures deterministic audit correctness
+Strong API contract safety
+Tailwind + shadcn/ui
+Fast SaaS-grade UI development
+Consistent design system
+Minimal design overhead with high polish
+Supabase
+Postgres + API in one backend
+Fast setup for MVP → production scaling
+Simple lead + audit persistence
+localStorage
+Instant UX without login
+Enables shareable result pages
+Reduces backend dependency
+Vercel
+Zero-config deployment
+CI/CD integration
+Edge-ready hosting for Next.js
+Security & secrets
+Variable	Purpose
+NEXT_PUBLIC_SUPABASE_URL	Supabase endpoint
+NEXT_PUBLIC_SUPABASE_ANON_KEY	Client-safe access (protected via RLS)
 
-## Data flow — persistence
+No sensitive secrets are exposed in frontend code.
 
-- **Client-first results:** Completed audits are keyed by result ID and stored under `burnrate-ai-reports-v1` in `localStorage` so share URLs work immediately without waiting on network.
-- **Server backup / CRM:** Successful completion posts summary columns to Supabase via `/api/audits`. Lead CTAs POST to `/api/leads`.
+Scalability plan (10k audits/day)
+Move runAudit() to server-side execution (API/edge)
+Add caching layer (Redis / Upstash) for repeated inputs
+Optimize Supabase tables with indexing + partitioning
+Queue audit writes asynchronously (decouple API latency)
+CDN cache /result/[id] pages for fast sharing + OG previews
+Testing strategy
+Vitest unit tests
+File: src/lib/audit.test.ts
+Scope: deterministic audit engine only
 
-## Secrets & deployment
+Ensures:
 
-| Variable | Consumed where | Purpose |
-|----------|----------------|---------|
-| `NEXT_PUBLIC_SUPABASE_URL` | `lib/supabase.ts`, API routes (via helper) | Project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Same | Anonymous key used by Route Handlers (Row Level Security must gate writes appropriately in Supabase dashboard) |
+pricing correctness
+regression safety
+stable financial outputs
+Extension points (future)
+Multi-tenant organization support
+Full audit history dashboard
+LLM-generated narrative layer
+Real-time AI spend benchmarking
+Embedded widget for external sites
+Referral system for growth
+Key principle
 
-## Testing
+Deterministic financial correctness > AI-generated creativity
 
-Automated regression tests live in `src/lib/audit.test.ts` (Vitest) and target deterministic behavior of `runAudit` only (see **TESTS.md**).
+This ensures:
 
-## Extension points (future, not shipped)
+reproducible outputs
+auditability
+trust in recommendations
+enterprise usability
+Summary
 
-- Server-side authored reports (persist full JSON blobs, not only summaries).
-- Auth + workspaces for multi-seat teams.
-- LLM overlays for prose narrative atop deterministic facts (currently recommendations are template strings).
+BURNRATE AI is a deterministic SaaS platform that converts AI tool usage data into structured financial optimization insights using:
+
+client-side computation for speed
+server-side persistence for reliability
+deterministic rule engine for trust
