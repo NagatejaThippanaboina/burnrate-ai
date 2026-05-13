@@ -16,6 +16,12 @@ Deterministic SaaS funnel for benchmarking **multi-vendor AI tool spend**. Teams
 - High-savings Credex consultation funnel
 - Deterministic finance-readable optimization logic
 
+### Email System
+
+- Transactional emails are handled using **Resend**
+- Used for lead confirmations and future optimization notifications
+- Requires `RESEND_API_KEY` in production environment
+
 ## Screenshots 
 
 | Area | Filename placeholder |
@@ -42,15 +48,15 @@ Deterministic SaaS funnel for benchmarking **multi-vendor AI tool spend**. Teams
 
 > Keep your live URL synchronized with Credex reviewers—prefer pinning the canonical production hostname you control via Vercel dashboard.
 
-### Environment variables _(Supabase)_ 
+ ### Environment variables _(Supabase + Services)_
 
 Set in **Vercel → Project Settings → Environment Variables**:
 
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `RESEND_API_KEY`
 
-Ensure Supabase tables **`audits`** and **`leads`** exist plus appropriate RLS for production exposure.
-
+Ensure Supabase tables **`audits`** and **`leads`** exist with proper RLS policies enabled.
 ---
 
 ## Tech stack
@@ -162,3 +168,9 @@ Credex-required documentation index:
 - **`ECONOMICS.md`**
 - **`USER_INTERVIEWS.md`** 
 - **`DEVLOG.md`** _(daily Credex format)_
+
+---
+
+## Production Status
+
+Fully deployed and production-ready SaaS demonstrating deterministic AI cost intelligence for modern AI tool stacks.
